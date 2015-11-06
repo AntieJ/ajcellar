@@ -16,6 +16,7 @@ app.get('/db', function(req, res){
   console.log("Connected correctly to server");
   db.close();
 });
+	res.send("connected to server");
 });
 
 
