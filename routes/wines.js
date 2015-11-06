@@ -1,3 +1,7 @@
+exports.index = function(req, res) {
+    res.send(["index"]);
+};
+
 exports.findAll = function(req, res) {
     res.send([{name:'wine1'}, {name:'wine2'}, {name:'wine3'}]);
 };

@@ -3,6 +3,7 @@ var express = require('express'),
 
 var app = express();
 
+app.get('/', wines.index);
 app.get('/wines', wines.findAll);
 app.get('/wines/:id', wines.findById);
 
