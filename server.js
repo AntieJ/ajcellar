@@ -1,57 +1,18 @@
 var express = require('express'),
-    wines = require('./routes/wines'),
-    mongo = require('mongodb'),
-    assert = require('assert');
-
-var uri = 'mongodb://heroku_g8hjpjnj:1chs4grt922vnn8iroaf4aam03@ds053160.mongolab.com:53160/heroku_g8hjpjnj';
-
-var seedData = [
-  {
-    aj1: 'hello1'
-  },
-  {
-    aj2: 'hello2'
-  }
-];
+    dbroute = require('./routes/db'),
+    bodyParser = require('body-parser');
 
 var app = express();
-
 app.set('port', (process.env.PORT || 5000));
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
-app.get('/', wines.index);
-app.get('/dbinsert', function(req, res){
-	mongo.MongoClient.connect(uri, function(err, db) {
-  assert.equal(null, err);
-  console.log("Connected correctly to server");
+app.get('/', dbroute.index);
+app.post('/create', dbroute.create);
 
-  var collection = db.collection('ajcollection');
-  collection.insert(seedData, function(err, result) {
-    
-    if(err) throw err;
-    db.close();
-});  
-});
-	res.send("db");
-});
-
-app.get('/dbfind', function(req, res){
-	mongo.MongoClient.connect(uri, function(err, db) {
-  assert.equal(null, err);
-  console.log("Connected correctly to server");
-
-  var collection = db.collection('ajcollection');
-  
-collection.find({}).toArray(function(err, docs) {
-    res.send(docs);
-  }); 
-  
-});
-});
-
-
-
-app.get('/wines', wines.findAll);
-app.get('/wines/:id', wines.findById);
+app.get('/dbseed', dbroute.dbSeed);
+app.get('/get', dbroute.getAll);
+app.get('/get/:id', dbroute.getById);
 
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
