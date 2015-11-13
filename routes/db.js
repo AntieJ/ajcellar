@@ -5,10 +5,12 @@ var uri = 'mongodb://heroku_g8hjpjnj:1chs4grt922vnn8iroaf4aam03@ds053160.mongola
 
 var seedData = [
   {
-    aj1: 'hello1'
+  	_id: "1",
+    aj1: "hello1"
   },
   {
-    aj2: 'hello2'
+  	_id: "2",
+    aj2: "hello2"
   }
 ];
 
@@ -22,7 +24,8 @@ exports.dbSeed = function(req, res){
   		assert.equal(null, err);
   		console.log("Connected correctly to server");
 		var collection = db.collection('ajcollection');
-		collection.insert(seedData, function(err, result) {
+		console.log("seed data: " + JSON.stringify(seedData));
+		collection.insertMany(seedData, function(err, result) {
 			if(err) throw err;
 			db.close();
 			});  
@@ -67,7 +70,7 @@ exports.getAll = function(req, res){
     		res.send(docs);
   		});   
 	});
-}
+};
 
 exports.update = function(req, res){
 	var id = req.params.id;
@@ -84,4 +87,18 @@ exports.update = function(req, res){
 		});
 		res.send(req.body);
 	});
+};
+
+exports.delete = function(req, res){
+	var id = req.params.id;
+	mongo.MongoClient.connect(uri, function(err, db){
+		assert.equal(null, err);
+		console.log("Connected correctly to server");
+		var collection = db.collection('ajcollection');
+		collection.deleteOne({_id: id}, null, function(err, results){
+			if (err) throw err;
+			db.close;
+		})
+		res.send(req.body);
+	})
 };

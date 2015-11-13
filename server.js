@@ -13,6 +13,7 @@ app.get('/dbseed', dbroute.dbSeed);
 app.get('/get', dbroute.getAll);
 app.get('/get/:id', dbroute.getById);
 app.post('/update/:id', dbroute.update);
+app.delete('/delete/:id', dbroute.delete);
 
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
