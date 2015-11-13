@@ -36,6 +36,7 @@ exports.create = function(req, res) {//remember to include the header Content-Ty
     	assert.equal(null, err);
     	console.log("Connected correctly to server")
     	var collection = db.collection('ajcollection');
+    	console.log("Creating: " + req.body);
     	collection.insert(req.body, function(err, result){
     		if (err) throw err;
     		db.close;
@@ -67,3 +68,20 @@ exports.getAll = function(req, res){
   		});   
 	});
 }
+
+exports.update = function(req, res){
+	var id = req.params.id;
+	var aj1FromBody = req.body.aj1;
+	mongo.MongoClient.connect(uri, function(err, db){
+		assert.equal(null, err);
+		console.log("Connected correctly to server");
+		var collection = db.collection('ajcollection');
+		console.log("updating "+ id + " with body: " + JSON.stringify(aj1FromBody)); 
+		collection.updateOne({_id: id},{$set:{aj1:aj1FromBody}}, function(err, results){
+			if (err) throw err;
+			console.log("response: "+ JSON.stringify(results));
+    		db.close;
+		});
+		res.send(req.body);
+	});
+};
